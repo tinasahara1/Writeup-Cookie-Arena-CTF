@@ -1,6 +1,6 @@
 # Writeup-Cookie-Arena-CTF
 
-## WEB
+## WEB Basic
 
 ### Hân Hoan
 >Cookie
@@ -73,3 +73,30 @@ Xác thực đăng phập => Flag
 ![js](https://github.com/tinasahara1/Writeup-Cookie-Arena-CTF/blob/96a28f7b2e0b76715f0f5fde7e685899b392c1c7/image/jsfuck4.PNG)
 
 Flag : `Flag{JAV-ascript_F*ck}`
+
+### Impossible
+> Tìm cách đăng nhập thông qua password
+> 
+Xem source code thì ta thấy được :
+```js
+function checkPass()
+{
+	var password = document.getElementById('password').value;
+	if (btoa(password.replace("cookiehanhoan", "")) == "Y29va2llaGFuaG9hbg==") {
+		window.setTimeout(function() {
+			window.location.assign('check.php?password=' + password);
+		}, 500);
+	}
+}
+```
+Hàm btoa() : mã hóa string thành base64
+Nếu **password** được nhập là cookiehanhoan thì sẽ bị lọc 
+Mà string sau khi decode base64 == "Y29va2llaGFuaG9hbg==" ==cookiehanhoan
+Sau khi nhìn lại ta phát hiện chức năng .replace() không hề lọc đệ quy mà chỉ lọc 1 lần 
+=> Ta có thể bypass nó bằng cách **cookiecookiehanhoanhanhoan**
+=> Flag : `Flag{Javascript_is_not_safe???}`
+
+###Infinite Loop
+>Vòng lặp vô hạn
+>
+Sau khi đăng nhập với 1 username:password bất kì ta sẽ được chuyển liên tục đến 
