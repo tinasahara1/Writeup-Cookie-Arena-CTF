@@ -72,4 +72,4 @@ Chữ cái thứ 3 và 4 được phân tích thành chuỗi và ghép lại :
 Xác thực đăng phập => Flag   
 ![js](https://github.com/tinasahara1/Writeup-Cookie-Arena-CTF/blob/96a28f7b2e0b76715f0f5fde7e685899b392c1c7/image/jsfuck4.PNG)
 
-
+Flag : `Flag{JAV-ascript_F*ck}`
