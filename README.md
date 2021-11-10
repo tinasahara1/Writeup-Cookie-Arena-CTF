@@ -1,4 +1,4 @@
-# Writeup-Cookie-Arena-CTF
+# Writeup-Cookie-Arena-CTF - WEB
 
 ## WEB Basic
 
@@ -183,3 +183,27 @@ Mình đổi tên file thành backup-ddmmyy.zip => unzip thì phát hiện 1 fil
 Ghép 3 phần ta được 1 flag hoàn chỉnh :
 
 Flag: `Flag{1b283f0725d536a0f217d89caca7b183}`
+
+
+###Gatling Gun
+>Nhặt đạn ở trong Github của Cookie Hân Hoan nhé
+>
+Page có dạng yêu cầu đăng nhập username, password, ip admin
+![gun](https://github.com/tinasahara1/Writeup-Cookie-Arena-CTF/blob/2e175223cd43254ccbefaa5a1c5704260a0452f1/image/gun.PNG)
+
+Đến gihub của cookiehanhoan ta thấy được :
+![gun](https://github.com/tinasahara1/Writeup-Cookie-Arena-CTF/blob/2e175223cd43254ccbefaa5a1c5704260a0452f1/image/gun_github.PNG)
+
+Từ kinh nghiệm của bài github ở phần forensic mình đã xem thử phần history của tất cả các file xem có lọc được bớt payload hay không 
+Sau 1 hồi check thì phát hiện ở file ip có 1 file đã được tạo lúc đầu với chỉ 1 ip duy nhất là `0.0.0.0`
+![gun](https://github.com/tinasahara1/Writeup-Cookie-Arena-CTF/blob/2e175223cd43254ccbefaa5a1c5704260a0452f1/image/gun_ip.PNG)
+
+Kiểm tra file username thì thấy tên file **userLame.txt** hmmmm user là me ?? có khi nào username chính là tên Folder HoangTuEch 
+Sau khi vào file mình đã lọc ra tên username trùng tên với folder => `hoangtueck` 
+![gun](https://github.com/tinasahara1/Writeup-Cookie-Arena-CTF/blob/2e175223cd43254ccbefaa5a1c5704260a0452f1/image/gun_pass.png)
+
+Bắt đầu chạy burp suite -> intridute để test thử những phán đoán của bản thân 
+![gun](https://github.com/tinasahara1/Writeup-Cookie-Arena-CTF/blob/2e175223cd43254ccbefaa5a1c5704260a0452f1/image/gun_flag.PNG)
+
+Flag: `FLAG{e6c068faf9241fe9d1f2000516718377}`
+
